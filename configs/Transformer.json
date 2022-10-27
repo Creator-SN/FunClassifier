@@ -1,8 +1,7 @@
 {
     "model_name": "Transformer",
     "dropout": 0.5,
-    "embedding_pretrained": "./THUCNews/data/embedding_Tencent.npz",
-    "pad_size": 32,
+    "pad_size": 64,
     "dim_model": 300,
     "hidden": 1024,
     "last_hidden": 512,

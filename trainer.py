@@ -1,7 +1,6 @@
 import os
 import uuid
 import torch
-import torch.nn as nn
 import torch.optim as optim
 import torch.nn.functional as F
 from torch.utils.data import DataLoader
@@ -17,15 +16,15 @@ from tqdm import tqdm
 
 class Trainer():
 
-    def __init__(self, train_path, eval_path, model_config, vocab_path=None, padding_length=50, batch_size=16, batch_size_eval=64, task_name='TextClassification'):
+    def __init__(self, train_path, eval_path, config, padding_length=50, batch_size=16, batch_size_eval=64, task_name='TextClassification'):
+        self.config = config
         self.train_path = train_path
         self.eval_path = eval_path
-        self.vocab_path = vocab_path
-        self.tokenizer = Tokenizer([train_path, eval_path], vocab_path)
+        self.vocab_path = config.vocab_path if hasattr(config, 'vocab_path') else None
+        self.tokenizer = Tokenizer([train_path, eval_path], self.vocab_path)
         self.task_name = task_name
         self.padding_length = padding_length
-        self.config = model_config
-        self.model_name = model_config.model_name
+        self.model_name = config.model_name
         self.config.n_vocab = len(self.tokenizer.vocab)
         self.analysis = Analysis()
         self.dataloader_init(train_path, eval_path,

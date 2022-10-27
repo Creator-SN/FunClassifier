@@ -1,14 +1,8 @@
 # coding: UTF-8
 import os
 import torch
-import numpy as np
 import pickle as pkl
-from tqdm import tqdm
-import time
-from datetime import timedelta
 
-
-MAX_VOCAB_SIZE = 10000  # 词表长度限制
 UNK, PAD = '<UNK>', '<PAD>'  # 未知字，padding符号
 
 class Tokenizer():
@@ -17,6 +11,7 @@ class Tokenizer():
             vocab = pkl.load(open(vocab_path, 'rb'))
         elif datasets is not None:
             vocab = self.build_vocab(datasets)
+            pkl.dump(vocab, open('new_vocab.pkl', 'wb'))
 
         self.vocab = vocab
         print(f"Vocab size: {len(vocab)}")
@@ -38,16 +33,16 @@ class Tokenizer():
         if len(tokens) > max_length:
             tokens = tokens[:max_length]
         final_tokens = tokens + [self.vocab[PAD]] * (max_length - len(tokens))
-        input_ids = torch.tensor(final_tokens)
-        attention_mask = torch.tensor([1] * len(tokens) + [0] * (max_length - len(tokens)))
-        token_type_ids = torch.tensor([0] * max_length)
+        input_ids = final_tokens
+        attention_mask = [1] * len(tokens) + [0] * (max_length - len(tokens))
+        token_type_ids = [0] * max_length
         return {
             'input_ids': input_ids,
             'attention_mask': attention_mask,
             'token_type_ids': token_type_ids
         }
     
-    def __call__(self, sentence, max_length):
+    def __call__(self, sentence, max_length=2048):
         return self.encode(sentence, max_length)
 
 class Analysis():
