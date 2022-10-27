@@ -1,0 +1,7 @@
+{
+    "model_name": "TextCNN",
+    "dropout": 0.5,
+    "embedding_pretrained": "./THUCNews/data/embedding_Tencent.npz",
+    "filter_sizes": [2, 3, 4],
+    "num_filters": 256
+}
